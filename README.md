@@ -1,82 +1,168 @@
-# Social Media AI Agent with Approval
+# Social Media AI Agent
 
-This repository contains a small Python-based AI assistant that generates social media posts and requires human approval before saving.
+An AI-powered command-line tool that generates social media posts on any topic, reviews them for safety, and saves approved content all with human approval at every step.
 
 ## Features
 
-- Generate social media post drafts from a topic and style.
-- Supports styles: casual, professional, funny, informative.
-- Safety review via OpenAI moderation-style prompt.
-- User approval flow (approve/save, reject, regenerate).
-- Save approved posts to approved_posts.txt with timestamp and topic.
+- Generate posts on any topic in seconds
+- Choose from 4 writing styles: Casual, Professional, Funny, or Informative
+- Built-in AI safety check before you approve
+- Approve, discard, or regenerate with a single keystroke
+- Saves all approved posts to a local file with timestamps
+
+---
 
 ## Requirements
 
-- Python 3.14+
-- python-dotenv
-- openai
-- python-frontmatter (not required by project/main.py, but in project deps)
-- 
-equests (in dependencies)
+- Python 3.9+
+- An OpenAI API key with available credits
 
-## Setup
+---
 
-1. Create and activate your venv:
+## Installation
 
-`powershell
-cd project
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-`
+**1. Clone the repository**
 
-2. Install dependencies:
+```bash
+git clone copy this project url
+cd social-media-agent
+```
 
-`powershell
-pip install -r requirements.txt  # if you have it, or:
-uv sync
-`
+**2. Install dependencies using uv**
 
-3. Add env file .env in project/ with:
+```bash
+uv add python-dotenv openai
+```
 
-`dotenv
-OPENAI_API_KEY=sk-...
-`
+Or using pip:
 
-4. Make sure .env is loaded by load_dotenv() in main.py.
+```bash
+pip install python-dotenv openai
+```
+
+**3. Set up your environment variables**
+
+Create a `.env` file in the project root:
+
+```
+OPENAI_API_KEY=your_api_key_here
+```
+
+---
 
 ## Usage
 
-`powershell
-cd project
-.\.venv\Scripts\Activate.ps1
-python main.py
-`
+Run the agent:
 
-Follow prompts:
-- type topic
-- choose style
-- approve/reject/regenerate
+```bash
+python social_media_agent.py
+```
 
-Approved posts are appended to approved_posts.txt.
+### Example Session
 
-## main.py workflow
+```
+============================================================
+  Social Media AI Agent
+============================================================
 
-1. load_dotenv() reads .env values.
-2. OpenAI(api_key=...) initializes client.
-3. generate_social_post(topic, style) creates prompt and calls chat.completions.create.
-4. 
-eview_post(post_text) calls OpenAI to validate for content policy issues.
-5. save_approved_post(post_text, topic) writes approved posts to file.
-6. main() loops until user exits.
+------------------------------------------------------------
+Enter a topic (or 'quit' to exit): Coffee
 
-## Common issues
+Choose a writing style:
+  1. Casual
+  2. Professional
+  3. Funny
+  4. Informative
 
-- ModuleNotFoundError: No module named 'dotenv': install python-dotenv.
-- insufficient_quota / 429: update OpenAI billing or plan.
-- OPENAI_API_KEY missing: define in .env and export.
+Enter 1-4: 3
 
-## Notes
+🤖 Generating post...
 
-- Protect your API key; do not commit .env to git.
-- The script uses Chat Completions API with gpt-3.5-turbo and max_tokens=200.
-- Adjust max_length, 	emperature, or safety prompt in functions as needed.
+============================================================
+☕️ Coffee: because adulting is hard and sleep is for the weak! 💤
+Who needs a superhero when you have a cup of joe that can transform
+you from a zombie to a functioning human? 🦸 Let's raise our mugs
+to caffeine and the magic it brings! #BrewtifulLife #CaffeineQueen #JavaJive
+============================================================
+Characters: 277
+
+🔍 Running safety check...
+✅ Looks good
+
+  1. Approve and save
+  2. Discard
+  3. Regenerate
+
+Enter 1-3: 1
+✅ Saved to approved_posts.txt
+```
+
+---
+
+## Writing Styles
+
+| Style | Description |
+|---|---|
+| **Casual** | Friendly and conversational |
+| **Professional** | Business-like and polished |
+| **Funny** | Humorous and entertaining |
+| **Informative** | Educational and factual |
+
+---
+
+## Output
+
+Approved posts are saved to `approved_posts.txt` in the project root with the following format:
+
+```
+============================================================
+Timestamp: 2025-03-24 14:32:10
+Topic: Coffee
+Post: ☕️ Coffee: because adulting is hard and sleep is for the weak!...
+```
+
+---
+
+## Project Structure
+
+```
+social-media-agent/
+│
+├── social_media_agent.py   # Main application
+├── approved_posts.txt      # Saved approved posts (auto-created)
+├── .env                    # API key (not committed to git)
+├── .gitignore
+└── README.md
+```
+
+---
+
+## Safety & Ethics
+
+Every generated post goes through an automated AI content review before you see the approval prompt. The review checks for:
+
+- Offensive or harmful content
+- Misinformation
+- Promotional spam
+- Privacy violations
+
+You remain in full control — nothing is saved without your explicit approval.
+
+---
+
+## .gitignore Recommendation
+
+Make sure your `.env` file is never committed:
+
+```
+.env
+approved_posts.txt
+__pycache__/
+.venv/
+```
+
+---
+
+## License
+
+MIT License — free to use, modify, and distribute.
