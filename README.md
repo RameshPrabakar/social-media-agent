@@ -1,168 +1,188 @@
-# Social Media AI Agent
+# 🤖 Social Media AI Agent
 
-An AI-powered command-line tool that generates social media posts on any topic, reviews them for safety, and saves approved content all with human approval at every step.
+An autonomous AI agent that **plans, generates, moderates, and saves** social media content — stopping only when it needs your final approval.
 
-## Features
-
-- Generate posts on any topic in seconds
-- Choose from 4 writing styles: Casual, Professional, Funny, or Informative
-- Built-in AI safety check before you approve
-- Approve, discard, or regenerate with a single keystroke
-- Saves all approved posts to a local file with timestamps
+Built with **OpenAI GPT-4o-mini Function Calling** and Python — this is a true agentic system where the model decides what to do next, not hardcoded `if/else` logic.
 
 ---
 
-## Requirements
+## 🎯 Real Output
 
-- Python 3.9+
-- An OpenAI API key with available credits
+```
+════════════════════════════════════════════════════════════
+  🤖 Social Media AI Agent  (Agentic Mode)
+════════════════════════════════════════════════════════════
+  The agent autonomously plans, generates, moderates,
+  and only stops to ask YOU for final approval.
+────────────────────────────────────────────────────────────
+
+  → Create a funny post about AI in Gym
+
+🤖 Agent thinking...
+  ⚙️  Agent calling: get_platform_guidelines(platform='twitter')
+  ⚙️  Agent calling: search_trending_topics(topic='AI', platform='twitter')
+  ⚙️  Agent calling: generate_post(topic='AI in Gym', style='funny', max_chars=280)
+  ⚙️  Agent calling: check_content_safety(post='...', platform='twitter')
+  ⚙️  Agent calling: ask_human_approval(safety_status='approved', char_count=170)
+
+════════════════════════════════════════════════════════════
+  📱 TWITTER  ·  Funny  ·  170 chars
+════════════════════════════════════════════════════════════
+
+  Just walked into the gym and my AI personal trainer asked
+  if I wanted a workout or a nap. I mean, who knew machines
+  could read my mind? 😂💪 #AIRevolution #GymLife #NapTime
+
+════════════════════════════════════════════════════════════
+  Safety: approved
+  1 → Approve & Save  |  2 → Discard  |  3 → Regenerate
+────────────────────────────────────────────────────────────
+  Your decision: 1
+  ⚙️  Agent calling: save_approved_post(...)
+
+✅ Post saved successfully!
+```
 
 ---
 
-## Installation
+## 🔧 Agent Tools
 
-**1. Clone the repository**
+The agent autonomously picks and chains these tools in the right order:
 
+```
+1. get_platform_guidelines   → character limits, tone rules per platform
+2. search_trending_topics    → relevant hashtags and trending angles
+3. generate_post             → writes the post using OpenAI
+4. check_content_safety      → AI moderation review
+5. improve_post              → auto-rewrites if safety check fails
+6. ask_human_approval        → human-in-the-loop gate before saving
+7. save_approved_post        → saves to file with metadata
+```
+
+---
+
+## 🔄 Agent Workflow
+
+```
+User Request
+     │
+     ▼
+┌─────────────────────────────────┐
+│      Agent Reasoning Loop       │
+│  GPT-4o-mini + Function Calling │
+└────────────────┬────────────────┘
+                 │  decides tool order autonomously
+     ┌───────────┼──────────────────────┐
+     ▼           ▼           ▼          ▼
+ Platform    Trending    Generate    Safety
+ Guidelines   Topics       Post       Check
+                             │           │
+                             │     fail? → improve_post → re-check
+                             │           │
+                             └─────────► Ask Human
+                                         │
+                               ┌─────────┼──────────┐
+                               ▼         ▼          ▼
+                            Approve   Reject    Regenerate
+                               │                   │
+                               ▼                   └──► improve_post → loop
+                          Save to File
+```
+
+---
+
+## 📱 Supported Platforms
+
+| Platform | Max Chars | Tone | Hashtags |
+|---|---|---|---|
+| Twitter | 280 | Punchy, conversational | 1–3 |
+| LinkedIn | 1300 | Professional, insightful | 3–5 |
+| Instagram | 2200 | Visual, lifestyle | 5–10 |
+| Facebook | 500 | Friendly, engaging | 1–2 |
+
+---
+
+## 🚀 Setup & Run
+
+**1. Install dependencies**
 ```bash
-git clone copy this project url
-cd social-media-agent
+pip install -r requirements.txt
 ```
 
-**2. Install dependencies using uv**
+**2. Create `.env` file**
+```
+OPENAI_API_KEY=your_openai_key_here
+```
 
+**3. Run the agent**
 ```bash
-uv add python-dotenv openai
-```
-
-Or using pip:
-
-```bash
-pip install python-dotenv openai
-```
-
-**3. Set up your environment variables**
-
-Create a `.env` file in the project root:
-
-```
-OPENAI_API_KEY=your_api_key_here
+python agent.py
 ```
 
 ---
 
-## Usage
-
-Run the agent:
-
-```bash
-python social_media_agent.py
-```
-
-### Example Session
+## 💬 Example Requests
 
 ```
-============================================================
-  Social Media AI Agent
-============================================================
-
-------------------------------------------------------------
-Enter a topic (or 'quit' to exit): Coffee
-
-Choose a writing style:
-  1. Casual
-  2. Professional
-  3. Funny
-  4. Informative
-
-Enter 1-4: 3
-
-🤖 Generating post...
-
-============================================================
-☕️ Coffee: because adulting is hard and sleep is for the weak! 💤
-Who needs a superhero when you have a cup of joe that can transform
-you from a zombie to a functioning human? 🦸 Let's raise our mugs
-to caffeine and the magic it brings! #BrewtifulLife #CaffeineQueen #JavaJive
-============================================================
-Characters: 277
-
-🔍 Running safety check...
-✅ Looks good
-
-  1. Approve and save
-  2. Discard
-  3. Regenerate
-
-Enter 1-3: 1
-✅ Saved to approved_posts.txt
+→ Write a LinkedIn post about AI in healthcare
+→ Create a funny Twitter post about Python bugs
+→ Instagram post about my startup launch
+→ Professional Facebook post about remote work trends
+→ Create a funny post about AI in Gym
 ```
 
 ---
 
-## Writing Styles
+## 📊 Session Summary
 
-| Style | Description |
-|---|---|
-| **Casual** | Friendly and conversational |
-| **Professional** | Business-like and polished |
-| **Funny** | Humorous and entertaining |
-| **Informative** | Educational and factual |
+At the end of each session the agent reports:
+
+```
+════════════════════════════════════════════════════════════
+  📊 Session Summary
+────────────────────────────────────────────────────────────
+  Posts generated : 3
+  Posts approved  : 2
+  Posts rejected  : 1
+  Approved posts saved to: approved_posts.txt
+════════════════════════════════════════════════════════════
+```
+
+All approved posts are saved to `approved_posts.txt` with timestamp, topic, platform, and style metadata.
 
 ---
 
-## Output
-
-Approved posts are saved to `approved_posts.txt` in the project root with the following format:
+## 📁 Project Structure
 
 ```
-============================================================
-Timestamp: 2025-03-24 14:32:10
-Topic: Coffee
-Post: ☕️ Coffee: because adulting is hard and sleep is for the weak!...
-```
-
----
-
-## Project Structure
-
-```
-social-media-agent/
-│
-├── social_media_agent.py   # Main application
-├── approved_posts.txt      # Saved approved posts (auto-created)
-├── .env                    # API key (not committed to git)
-├── .gitignore
+social_agent/
+├── agent.py            # Main agent — reasoning loop + all tools
+├── requirements.txt    # Dependencies
+├── .env                # Your OpenAI API key (not committed)
+├── approved_posts.txt  # Auto-created when first post is approved
 └── README.md
 ```
 
 ---
 
-## Safety & Ethics
+## 🛡️ Responsible AI Practices
 
-Every generated post goes through an automated AI content review before you see the approval prompt. The review checks for:
-
-- Offensive or harmful content
-- Misinformation
-- Promotional spam
-- Privacy violations
-
-You remain in full control — nothing is saved without your explicit approval.
+- **Human-in-the-loop**: No post is ever saved without explicit human approval
+- **AI content moderation**: Every post passes a safety check before reaching you
+- **Auto-repair**: If moderation flags issues, the agent rewrites and re-checks automatically
+- **Transparency**: Every tool call is printed so you see exactly what the agent is doing
 
 ---
 
-## .gitignore Recommendation
+## 📝 Tech Stack
 
-Make sure your `.env` file is never committed:
-
-```
-.env
-approved_posts.txt
-__pycache__/
-.venv/
-```
+- **Python 3.10+**
+- **OpenAI GPT-4o-mini** — generation, safety review, trend search
+- **OpenAI Function Calling** — autonomous tool selection and chaining
+- **python-dotenv** — environment variable management
 
 ---
 
-## License
+## 🔗 Repository
 
-MIT License — free to use, modify, and distribute.
+**GitHub:** [github.com/RameshPrabakar/social-media-agent](https://github.com/RameshPrabakar/social-media-agent)
