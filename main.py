@@ -36,7 +36,7 @@ memory = {
     "history": []           # list of {topic, platform, style, post, status}
 }
 
-# ── Tool Definitions (the agent picks these autonomously) ─────────────────────
+# ── Tool Definitions (the agent picks these autonomously)
 TOOLS = [
     {
         "type": "function",
@@ -176,7 +176,7 @@ TOOLS = [
     }
 ]
 
-# ── Tool Implementations ───────────────────────────────────────────────────────
+# ── Tool Implementations
 
 def get_platform_guidelines(platform: str) -> dict:
     """Returns platform-specific rules the agent uses to guide generation."""
