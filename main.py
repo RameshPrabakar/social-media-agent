@@ -27,7 +27,7 @@ from openai import OpenAI
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# ── Memory: persists across the conversation ──────────────────────────────────
+# Memory: persists across the conversation
 memory = {
     "session_start": datetime.now().isoformat(),
     "posts_generated": 0,
@@ -36,7 +36,7 @@ memory = {
     "history": []           # list of {topic, platform, style, post, status}
 }
 
-# ── Tool Definitions (the agent picks these autonomously)
+# Tool Definitions (the agent picks these autonomously)
 TOOLS = [
     {
         "type": "function",
@@ -176,7 +176,7 @@ TOOLS = [
     }
 ]
 
-# ── Tool Implementations
+# Tool Implementations
 
 def get_platform_guidelines(platform: str) -> dict:
     """Returns platform-specific rules the agent uses to guide generation."""
@@ -195,7 +195,7 @@ def search_trending_topics(topic: str, platform: str = "twitter") -> dict:
         model="gpt-4o-mini",
         messages=[{
             "role": "user",
-            "content": f"Give me 5 trending hashtags and 2 trending angles for the topic '{topic}' on {platform} in 2025. Return JSON: {{\"hashtags\": [...], \"angles\": [...]}}"
+            "content": f"Give me 5 trending hashtags and 2 trending angles for the topic '{topic}' on {platform} in 2026. Return JSON: {{\"hashtags\": [...], \"angles\": [...]}}"
         }],
         response_format={"type": "json_object"},
         temperature=0.7
@@ -315,7 +315,7 @@ def save_approved_post(post: str, topic: str, platform: str, style: str) -> dict
     return {"saved": True, "file": filepath, "total_approved": memory["posts_approved"]}
 
 
-# ── Tool dispatcher ────────────────────────────────────────────────────────────
+# Tool dispatcher
 def dispatch_tool(name: str, args: dict):
     """Routes tool calls from the agent to the right function."""
     if name == "get_platform_guidelines":    return get_platform_guidelines(**args)
@@ -328,7 +328,7 @@ def dispatch_tool(name: str, args: dict):
     return {"error": f"Unknown tool: {name}"}
 
 
-# ── Agent Reasoning Loop
+# Agent Reasoning Loop
 def run_agent(user_request: str):
     """
     Core agentic loop — the model decides what to do next.
@@ -403,7 +403,7 @@ Be efficient: complete the full workflow without unnecessary steps."""
     return memory
 
 
-# ── Session summary 
+# Session summary 
 def print_session_summary():
     print("\n" + "═" * 60)
     print("   Session Summary")
@@ -416,7 +416,7 @@ def print_session_summary():
     print("═" * 60)
 
 
-# ── Main CLI 
+# Main CLI 
 def main():
     print("═" * 60)
     print("  🤖 Social Media AI Agent  (Agentic Mode)")
